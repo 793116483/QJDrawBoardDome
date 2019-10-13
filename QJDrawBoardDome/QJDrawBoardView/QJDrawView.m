@@ -161,6 +161,7 @@
     }
 }
 
+// 系统调用，内部自动关联一个上下文
 - (void)drawRect:(CGRect)rect {
     // Drawing code
     for (id path in self.bezierPaths) {
