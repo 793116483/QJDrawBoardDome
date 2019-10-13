@@ -43,39 +43,40 @@
     self.curLineColor = [UIColor blackColor];
     self.curLineWidth = 1.0 ;
     
+    /*
     // 颜色渐变层
-//    CAGradientLayer * layer = [CAGradientLayer layer];
-//    layer.colors = @[(id)[UIColor redColor].CGColor ,(id)[UIColor blueColor].CGColor, (id)[UIColor blackColor].CGColor , (id)[UIColor yellowColor].CGColor];
-//    layer.locations = @[@0.2 , @0.4 ,@0.8];
-//    layer.type = kCAGradientLayerConic ;
-//    layer.frame = self.layer.bounds;
-//    [self.layer addSublayer:layer];
+    CAGradientLayer * layer = [CAGradientLayer layer];
+    layer.colors = @[(id)[UIColor redColor].CGColor ,(id)[UIColor blueColor].CGColor, (id)[UIColor blackColor].CGColor , (id)[UIColor yellowColor].CGColor];
+    layer.locations = @[@0.2 , @0.4 ,@0.8];
+    layer.type = kCAGradientLayerConic ;
+    layer.frame = self.layer.bounds;
+    [self.layer addSublayer:layer];
     
     // 复制图层
-//    CAReplicatorLayer * repLayer = [CAReplicatorLayer layer];
-//    repLayer.frame = self.layer.bounds;
-//    repLayer.backgroundColor = [UIColor blueColor].CGColor;
-//    repLayer.opacity = 0.6;
-//    repLayer.instanceCount = 2 ;
-//    repLayer.instanceColor = [UIColor redColor].CGColor;
-//    repLayer.anchorPoint = CGPointMake(0.5, 1);
-//    repLayer.position = CGPointMake(repLayer.bounds.size.width / 2.0, repLayer.bounds.size.height);
-//    repLayer.instanceTransform = CATransform3DMakeRotation(M_PI, 1, 0, 0);
-//    repLayer.instanceRedOffset -= 0.2;
-//    repLayer.instanceGreenOffset -= 0.2;
-//    repLayer.instanceBlueOffset -= 0.2;
-//    repLayer.instanceAlphaOffset -= 0.1;
-//    [self.layer addSublayer:repLayer];
+    CAReplicatorLayer * repLayer = [CAReplicatorLayer layer];
+    repLayer.frame = self.layer.bounds;
+    repLayer.backgroundColor = [UIColor blueColor].CGColor;
+    repLayer.opacity = 0.6;
+    repLayer.instanceCount = 2 ;
+    repLayer.instanceColor = [UIColor redColor].CGColor;
+    repLayer.anchorPoint = CGPointMake(0.5, 1);
+    repLayer.position = CGPointMake(repLayer.bounds.size.width / 2.0, repLayer.bounds.size.height);
+    repLayer.instanceTransform = CATransform3DMakeRotation(M_PI, 1, 0, 0);
+    repLayer.instanceRedOffset -= 0.2;
+    repLayer.instanceGreenOffset -= 0.2;
+    repLayer.instanceBlueOffset -= 0.2;
+    repLayer.instanceAlphaOffset -= 0.1;
+    [self.layer addSublayer:repLayer];
     
     // 需要复制的子图层
-//    CALayer * subLayer = [CALayer layer];
-//    subLayer.frame = CGRectMake(50, 100, 40, 100);
-//    subLayer.backgroundColor = [UIColor grayColor].CGColor;
-//    subLayer.anchorPoint = CGPointMake(0.5, 1);
-//    subLayer.position = CGPointMake(50, 100);
-//    subLayer.repeatCount = 3;
-//    [repLayer addSublayer:subLayer];
-    
+    CALayer * subLayer = [CALayer layer];
+    subLayer.frame = CGRectMake(50, 100, 40, 100);
+    subLayer.backgroundColor = [UIColor grayColor].CGColor;
+    subLayer.anchorPoint = CGPointMake(0.5, 1);
+    subLayer.position = CGPointMake(50, 100);
+    subLayer.repeatCount = 3;
+    [repLayer addSublayer:subLayer];
+    */
 }
 -(void)pan:(UIPanGestureRecognizer *)pan
 {
@@ -98,9 +99,10 @@
                 
                 // self 上的点
                 CGRect screenshotRact = [self rectWithPoint1:startPoint_self point2:[pan locationInView:self]] ;
-                QJImage * newImage = [self screenshotWithRect:screenshotRact];
+                QJImage * newImage = [QJImage imageOvalScreenshotWithView:self atRect:screenshotRact];
                 [self.bezierPaths addObject:newImage];
                 [self drawImage:newImage];
+                //恢复数据
                 self.isScreenshot = NO ;
                 [self.screenshotRactView removeFromSuperview];
                 self.screenshotRactView.frame = CGRectZero;
@@ -148,28 +150,6 @@
     }
     
     return CGRectMake(x, y, width, heigth);
-}
--(QJImage *)screenshotWithRect:(CGRect)rect
-{
-    UIGraphicsBeginImageContext(self.bounds.size);
-
-    CGContextRef ctx = UIGraphicsGetCurrentContext();
-    [self.layer renderInContext:ctx];
-    UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
-    CGImageRef imageRef = image.CGImage;
-
-    CGImageRef subImageRef =CGImageCreateWithImageInRect(imageRef, rect);
-
-    CGContextDrawImage(ctx, rect, subImageRef);
-
-    image = [UIImage imageWithCGImage:subImageRef];
-
-    UIGraphicsEndImageContext();
-    
-    QJImage * newImage = [[QJImage alloc] initWithCGImage:image.CGImage];
-    newImage.drawInRect = rect ;
-    
-    return newImage;
 }
 
 -(void)drawImage:(UIImage *)image
