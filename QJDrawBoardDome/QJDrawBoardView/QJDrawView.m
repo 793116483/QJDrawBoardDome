@@ -12,7 +12,7 @@
 
 @interface QJDrawView ()
 
-@property (nonatomic , strong) NSMutableArray * bezierPaths ;
+@property (nonatomic , strong) NSMutableArray<UIBezierPath *> *_Nonnull bezierPaths ;
 // 橡皮檫状态
 @property (nonatomic , assign) BOOL isEraseState ;
 
