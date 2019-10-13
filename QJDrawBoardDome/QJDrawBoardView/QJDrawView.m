@@ -8,12 +8,18 @@
 
 #import "QJDrawView.h"
 #import "QJBezierPath.h"
+#import "QJImage.h"
 
 @interface QJDrawView ()
 
 @property (nonatomic , strong) NSMutableArray * bezierPaths ;
 // 橡皮檫状态
 @property (nonatomic , assign) BOOL isEraseState ;
+
+// 是否是截图
+@property (nonatomic , assign) BOOL isScreenshot ;
+// 截图的矩形 view
+@property (nonatomic , strong) UIView * screenshotRactView;
 
 @end
 
@@ -73,33 +79,102 @@
 }
 -(void)pan:(UIPanGestureRecognizer *)pan
 {
-    CGPoint point = [pan locationInView:self];
 //    NSLog(@"{%lf,%lf}",point.x , point.y);
+    if (self.isScreenshot) {
+        CGPoint point = [pan locationInView:self.window];
 
-    if (pan.state == UIGestureRecognizerStateBegan) {
-        QJBezierPath * path = [QJBezierPath bezierPath];
-        [path setLineJoinStyle:kCGLineJoinRound];
-        [path setLineCapStyle:kCGLineCapRound];
-        if (self.isEraseState) {
-            [path setLineWidth:10];
-            path.color = self.backgroundColor ;
+        static CGPoint startPoint_screen , startPoint_self;
+        if (pan.state == UIGestureRecognizerStateBegan) {
+            self.screenshotRactView.frame = CGRectMake(point.x, point.y, 0, 0);
+            startPoint_screen = point ;
+            startPoint_self = [pan locationInView:self];
         }
-        else{
-            [path setLineWidth:self.curLineWidth];
-            path.color = self.curLineColor ;
+        else {
+            
+            self.screenshotRactView.frame = [self rectWithPoint1:startPoint_screen point2:point];
+            
+            if (pan.state == UIGestureRecognizerStateEnded) {
+                [self.bezierPaths removeAllObjects];
+                
+                // self 上的点
+                CGRect screenshotRact = [self rectWithPoint1:startPoint_self point2:[pan locationInView:self]] ;
+                QJImage * newImage = [self screenshotWithRect:screenshotRact];
+                [self.bezierPaths addObject:newImage];
+                [self drawImage:newImage];
+                self.isScreenshot = NO ;
+                [self.screenshotRactView removeFromSuperview];
+                self.screenshotRactView.frame = CGRectZero;
+            }
         }
-        [path moveToPoint:point];
-        [self.bezierPaths addObject:path];
     }
-    else if (pan.state == UIGestureRecognizerStateChanged){
-        QJBezierPath * path = [self.bezierPaths lastObject];
-        [path addLineToPoint:point];
+    else{
+        CGPoint point = [pan locationInView:self];
+
+        if (pan.state == UIGestureRecognizerStateBegan) {
+            QJBezierPath * path = [QJBezierPath bezierPath];
+            [path setLineJoinStyle:kCGLineJoinRound];
+            [path setLineCapStyle:kCGLineCapRound];
+            if (self.isEraseState) {
+                [path setLineWidth:10];
+                path.color = self.backgroundColor ;
+            }
+            else{
+                [path setLineWidth:self.curLineWidth];
+                path.color = self.curLineColor ;
+            }
+            [path moveToPoint:point];
+            [self.bezierPaths addObject:path];
+        }
+        else if (pan.state == UIGestureRecognizerStateChanged){
+            QJBezierPath * path = [self.bezierPaths lastObject];
+            [path addLineToPoint:point];
+        }
+        [self setNeedsDisplay];
     }
-    [self setNeedsDisplay];
+}
+-(CGRect)rectWithPoint1:(CGPoint)point1 point2:(CGPoint)point2
+{
+    CGFloat x = point1.x ;
+    CGFloat y = point1.y ;
+    CGFloat width = point2.x - x ;
+    CGFloat heigth = point2.y - y ;
+    if (width < 0) {
+        width = -width;
+        CGFloat t = x ; x = point2.x ; point2.x = t ;
+    }
+    if (heigth < 0) {
+        heigth = -heigth ;
+        CGFloat t = y ; y = point2.y ; point2.y = t ;
+    }
+    
+    return CGRectMake(x, y, width, heigth);
+}
+-(QJImage *)screenshotWithRect:(CGRect)rect
+{
+    UIGraphicsBeginImageContext(self.bounds.size);
+
+    CGContextRef ctx = UIGraphicsGetCurrentContext();
+    [self.layer renderInContext:ctx];
+    UIImage * image = UIGraphicsGetImageFromCurrentImageContext();
+    CGImageRef imageRef = image.CGImage;
+
+    CGImageRef subImageRef =CGImageCreateWithImageInRect(imageRef, rect);
+
+    CGContextDrawImage(ctx, rect, subImageRef);
+
+    image = [UIImage imageWithCGImage:subImageRef];
+
+    UIGraphicsEndImageContext();
+    
+    QJImage * newImage = [[QJImage alloc] initWithCGImage:image.CGImage];
+    newImage.drawInRect = rect ;
+    
+    return newImage;
 }
 
 -(void)drawImage:(UIImage *)image
 {
+    self.isEraseState = NO ;
     if (image.size.width) {
         [self.bezierPaths addObject:image];
         [self setNeedsDisplay];
@@ -114,9 +189,13 @@
             [curPath.color set];
             [curPath stroke];
         }
+        else if ([path isKindOfClass:[QJImage class]]){
+            QJImage * image = (QJImage *)path ;
+            [image drawInRect:image.drawInRect];
+        }
         else if ([path isKindOfClass:[UIImage class]]){
             UIImage * image = (UIImage *)path ;
-            [image drawInRect:self.bounds];
+            [image drawInRect:CGRectMake(0, 0, image.size.width, image.size.height)];
         }
     }
 }
@@ -125,23 +204,36 @@
 // 清屏
 - (void)clearAll{
     self.isEraseState = NO ;
+    self.isScreenshot = NO ;
     self.bezierPaths = nil ;
     [self setNeedsDisplay];
 }
 // 撤销
 - (void)repeal {
     self.isEraseState = NO ;
+    self.isScreenshot = NO ;
     [self.bezierPaths removeLastObject];
     [self setNeedsDisplay];
 }
 // 橡皮擦
 - (void)erase {
     self.isEraseState = YES ;
+    self.isScreenshot = NO ;
 }
+
+// 截图
+-(void)screenshot
+{
+    self.isEraseState = NO ;
+    self.isScreenshot = YES ;
+    [self.window addSubview:self.screenshotRactView];
+}
+
 // 把画板截个图保存到相册
 - (void)save {
     self.isEraseState = NO ;
-    
+    self.isScreenshot = NO ;
+
     // opaque : 不透明
     UIGraphicsBeginImageContextWithOptions(self.bounds.size, NO, 0);
     
@@ -166,7 +258,6 @@
     else{
         NSLog(@"保存到相册失败");
     }
-   
 }
 
 #pragma make - getter
@@ -177,15 +268,28 @@
     }
     return _bezierPaths ;
 }
+- (UIView *)screenshotRactView
+{
+    if (!_screenshotRactView) {
+        _screenshotRactView = [[UIView alloc] init];
+        _screenshotRactView.backgroundColor = [UIColor blackColor];
+        _screenshotRactView.alpha = 0.2 ;
+    }
+    return _screenshotRactView ;
+}
 -(void)setCurLineWidth:(CGFloat)curLineWidth
 {
     _curLineWidth = curLineWidth ;
     self.isEraseState = NO ;
+    self.isScreenshot = NO ;
+
 }
 -(void)setCurLineColor:(UIColor *)curLineColor
 {
     _curLineColor = curLineColor ;
     self.isEraseState = NO ;
+    self.isScreenshot = NO ;
+
 }
 
 @end

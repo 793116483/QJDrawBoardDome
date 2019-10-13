@@ -49,6 +49,11 @@
     [self.drawView drawImage:image];
 
 }
+// 截图
+- (IBAction)screenshot:(UIButton *)sender {
+    [self.drawView screenshot];
+}
+
 // 保存
 - (IBAction)save:(id)sender {
     [self.drawView save];

@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
-    <device id="retina6_1" orientation="portrait">
-        <adaptation id="fullscreen"/>
-    </device>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="15400" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15404"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -74,9 +72,18 @@
                                 <action selector="photograph:" destination="iN0-l3-epB" eventType="touchUpInside" id="vMs-oI-aVp"/>
                             </connections>
                         </button>
+                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ja1-rw-sbP">
+                            <rect key="frame" x="256" y="17" width="37" height="34"/>
+                            <fontDescription key="fontDescription" type="system" pointSize="18"/>
+                            <state key="normal" title="截图"/>
+                            <connections>
+                                <action selector="screenshot:" destination="iN0-l3-epB" eventType="touchUpInside" id="Hc7-aY-hhK"/>
+                            </connections>
+                        </button>
                     </subviews>
                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                     <constraints>
+                        <constraint firstItem="Ja1-rw-sbP" firstAttribute="bottom" secondItem="c4D-Gn-Tuh" secondAttribute="bottom" id="2Ea-MW-REB"/>
                         <constraint firstItem="6Aw-pD-GNm" firstAttribute="leading" secondItem="B0F-71-nW3" secondAttribute="leading" constant="12" id="Aw3-J6-9N8"/>
                         <constraint firstAttribute="height" constant="68" id="DUi-rg-QcA"/>
                         <constraint firstAttribute="bottom" secondItem="LWD-sV-76Z" secondAttribute="bottom" constant="16" id="Eof-De-GmK"/>
@@ -85,6 +92,7 @@
                         <constraint firstItem="37v-pN-RED" firstAttribute="top" secondItem="B0F-71-nW3" secondAttribute="top" constant="17" id="Le1-KP-BNM"/>
                         <constraint firstAttribute="bottom" secondItem="37v-pN-RED" secondAttribute="bottom" constant="17" id="RNC-o1-pqK"/>
                         <constraint firstAttribute="trailing" secondItem="LWD-sV-76Z" secondAttribute="trailing" constant="11" id="RU2-eh-ibu"/>
+                        <constraint firstItem="Ja1-rw-sbP" firstAttribute="leading" secondItem="c4D-Gn-Tuh" secondAttribute="trailing" constant="14" id="U1C-Xc-T3P"/>
                         <constraint firstAttribute="bottom" secondItem="6Aw-pD-GNm" secondAttribute="bottom" constant="16" id="U6C-sq-PLX"/>
                         <constraint firstItem="LWD-sV-76Z" firstAttribute="top" secondItem="B0F-71-nW3" secondAttribute="top" constant="18" id="V2A-yG-b8O"/>
                         <constraint firstItem="HqO-iN-gZu" firstAttribute="top" secondItem="B0F-71-nW3" secondAttribute="top" constant="18" id="VDV-Kj-SU4"/>
@@ -92,7 +100,9 @@
                         <constraint firstItem="c4D-Gn-Tuh" firstAttribute="top" secondItem="B0F-71-nW3" secondAttribute="top" constant="17" id="ctG-IJ-5LN"/>
                         <constraint firstItem="37v-pN-RED" firstAttribute="leading" secondItem="HqO-iN-gZu" secondAttribute="trailing" constant="22" id="iTe-0q-zEd"/>
                         <constraint firstAttribute="bottom" secondItem="HqO-iN-gZu" secondAttribute="bottom" constant="16" id="mws-ir-MZm"/>
+                        <constraint firstItem="Ja1-rw-sbP" firstAttribute="height" secondItem="c4D-Gn-Tuh" secondAttribute="height" id="oVQ-k8-yhi"/>
                         <constraint firstItem="6Aw-pD-GNm" firstAttribute="top" secondItem="B0F-71-nW3" secondAttribute="top" constant="17" id="uSc-Fj-aep"/>
+                        <constraint firstItem="Ja1-rw-sbP" firstAttribute="top" secondItem="c4D-Gn-Tuh" secondAttribute="top" id="xcp-Nz-O4a"/>
                     </constraints>
                 </view>
                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rcW-qd-gei">

@@ -15,7 +15,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic , assign) CGFloat curLineWidth ;
 @property (nonatomic , strong) UIColor * curLineColor ;
 
-- (void)drawImage:(UIImage *)image ;
+// 渲染图片
+- (void)drawImage:(UIImage *)image;
 
 // 清屏
 - (void)clearAll ;
@@ -23,6 +24,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)repeal ;
 // 橡皮擦
 - (void)erase ;
+- (void)screenshot;
 // 把画板截个图保存到相册
 - (void)save ;
 

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		F23B7D3423531FBA009D3109 /* QJImage.m in Sources */ = {isa = PBXBuildFile; fileRef = F23B7D3323531FBA009D3109 /* QJImage.m */; };
 		F2EF1E352326912000CCE02A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F2EF1E342326912000CCE02A /* AppDelegate.m */; };
 		F2EF1E382326912000CCE02A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F2EF1E372326912000CCE02A /* ViewController.m */; };
 		F2EF1E3B2326912000CCE02A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F2EF1E392326912000CCE02A /* Main.storyboard */; };
@@ -40,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		F23B7D3223531FBA009D3109 /* QJImage.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QJImage.h; sourceTree = "<group>"; };
+		F23B7D3323531FBA009D3109 /* QJImage.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = QJImage.m; sourceTree = "<group>"; };
 		F2EF1E302326912000CCE02A /* QJDrawBoardDome.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = QJDrawBoardDome.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F2EF1E332326912000CCE02A /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F2EF1E342326912000CCE02A /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -157,6 +160,8 @@
 				F2EF1E7223269F8700CCE02A /* QJDrawView.m */,
 				F2EF1E742326A12100CCE02A /* QJBezierPath.h */,
 				F2EF1E752326A12100CCE02A /* QJBezierPath.m */,
+				F23B7D3223531FBA009D3109 /* QJImage.h */,
+				F23B7D3323531FBA009D3109 /* QJImage.m */,
 			);
 			path = QJDrawBoardView;
 			sourceTree = "<group>";
@@ -294,6 +299,7 @@
 			files = (
 				F2EF1E762326A12100CCE02A /* QJBezierPath.m in Sources */,
 				F2EF1E382326912000CCE02A /* ViewController.m in Sources */,
+				F23B7D3423531FBA009D3109 /* QJImage.m in Sources */,
 				F2EF1E3E2326912000CCE02A /* QJDrawBoardDome.xcdatamodeld in Sources */,
 				F2EF1E6E232692A200CCE02A /* QJDrawBoardView.m in Sources */,
 				F2EF1E462326912100CCE02A /* main.m in Sources */,
