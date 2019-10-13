@@ -1,6 +1,8 @@
 # QJDrawBoardDome
 利用Quartz2D制作画板
 
+![](/画板样图.png)
+
 ### Quartz2D 知识
 - **实际上是在 图层 CALayer 上实现画图**
 - 可以实现：画线、矩形、圆、椭圆、字符串、图片 等等
