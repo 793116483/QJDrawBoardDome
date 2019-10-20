@@ -51,7 +51,7 @@
 }
 // 截图
 - (IBAction)screenshot:(UIButton *)sender {
-    [self.drawView screenshot];
+    [self.drawView screenshotWithImageStyle:QJScreenshotImageStyleOval];
 }
 
 // 保存

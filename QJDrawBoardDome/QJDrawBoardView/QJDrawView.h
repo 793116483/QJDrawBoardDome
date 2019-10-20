@@ -10,6 +10,12 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
+// 截图的样式 枚举
+typedef NS_ENUM(NSInteger , QJScreenshotImageStyle){
+    QJScreenshotImageStyleRect , // 矩形样式图
+    QJScreenshotImageStyleOval , // 椭圆形样式图
+};
+
 @interface QJDrawView : UIView
 
 @property (nonatomic , assign) CGFloat curLineWidth ;
@@ -24,8 +30,11 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)repeal ;
 // 橡皮擦
 - (void)erase ;
-- (void)screenshot;
-// 把画板截个图保存到相册
+
+// 把画板截个图，重新显示在画板上
+-(void)screenshotWithImageStyle:(QJScreenshotImageStyle)imageStyle;
+
+// 把画板保存到相册
 - (void)save ;
 
 @end

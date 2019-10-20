@@ -18,7 +18,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 // 在view上剪取 rect区域大小的 图
 +(instancetype)imageScreenshotWithView:(UIView *)view atRect:(CGRect)rect ;
-// 剪取一个圆形图在view的rect区域内
+// 剪取一个椭圆形图在view的rect区域内
 +(instancetype)imageOvalScreenshotWithView:(UIView *)view atRect:(CGRect)rect ;
 
 @end

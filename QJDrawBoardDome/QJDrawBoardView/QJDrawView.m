@@ -12,12 +12,15 @@
 
 @interface QJDrawView ()
 
-@property (nonatomic , strong) NSMutableArray<UIBezierPath *> *_Nonnull bezierPaths ;
+// 存入 UIBezierPath 或 UIImage 对象
+@property (nonatomic , strong) NSMutableArray *_Nonnull paths ;
 // 橡皮檫状态
 @property (nonatomic , assign) BOOL isEraseState ;
 
 // 是否是截图
 @property (nonatomic , assign) BOOL isScreenshot ;
+// 截取的图样式
+@property (nonatomic , assign) QJScreenshotImageStyle imageStyle ;
 // 截图的矩形 view
 @property (nonatomic , strong) UIView * screenshotRactView;
 
@@ -95,13 +98,24 @@
             self.screenshotRactView.frame = [self rectWithPoint1:startPoint_screen point2:point];
             
             if (pan.state == UIGestureRecognizerStateEnded) {
-                [self.bezierPaths removeAllObjects];
+                [self.paths removeAllObjects];
                 
                 // self 上的点
                 CGRect screenshotRact = [self rectWithPoint1:startPoint_self point2:[pan locationInView:self]] ;
-                QJImage * newImage = [QJImage imageOvalScreenshotWithView:self atRect:screenshotRact];
-                [self.bezierPaths addObject:newImage];
-                [self drawImage:newImage];
+                QJImage * newImage = nil;
+                // 根据所需样式 截图
+                if (self.imageStyle == QJScreenshotImageStyleRect) {
+                    newImage = [QJImage imageScreenshotWithView:self atRect:screenshotRact];
+                }
+                else{
+                    newImage = [QJImage imageOvalScreenshotWithView:self atRect:screenshotRact];
+                }
+                // 添加并渲染
+                if (newImage) {
+                    [self.paths addObject:newImage];
+                    [self drawImage:newImage];
+                }
+                
                 //恢复数据
                 self.isScreenshot = NO ;
                 [self.screenshotRactView removeFromSuperview];
@@ -125,10 +139,10 @@
                 path.color = self.curLineColor ;
             }
             [path moveToPoint:point];
-            [self.bezierPaths addObject:path];
+            [self.paths addObject:path];
         }
         else if (pan.state == UIGestureRecognizerStateChanged){
-            QJBezierPath * path = [self.bezierPaths lastObject];
+            QJBezierPath * path = [self.paths lastObject];
             [path addLineToPoint:point];
         }
         [self setNeedsDisplay];
@@ -156,7 +170,7 @@
 {
     self.isEraseState = NO ;
     if (image.size.width) {
-        [self.bezierPaths addObject:image];
+        [self.paths addObject:image];
         [self setNeedsDisplay];
     }
 }
@@ -164,7 +178,7 @@
 // 系统调用，内部自动关联一个上下文
 - (void)drawRect:(CGRect)rect {
     // Drawing code
-    for (id path in self.bezierPaths) {
+    for (id path in self.paths) {
         if ([path isKindOfClass:[QJBezierPath class]]) {
             QJBezierPath * curPath = (QJBezierPath *)path;
             [curPath.color set];
@@ -186,14 +200,14 @@
 - (void)clearAll{
     self.isEraseState = NO ;
     self.isScreenshot = NO ;
-    self.bezierPaths = nil ;
+    self.paths = nil ;
     [self setNeedsDisplay];
 }
 // 撤销
 - (void)repeal {
     self.isEraseState = NO ;
     self.isScreenshot = NO ;
-    [self.bezierPaths removeLastObject];
+    [self.paths removeLastObject];
     [self setNeedsDisplay];
 }
 // 橡皮擦
@@ -203,8 +217,9 @@
 }
 
 // 截图
--(void)screenshot
+-(void)screenshotWithImageStyle:(QJScreenshotImageStyle)imageStyle
 {
+    self.imageStyle = imageStyle ;
     self.isEraseState = NO ;
     self.isScreenshot = YES ;
     [self.window addSubview:self.screenshotRactView];
@@ -242,12 +257,12 @@
 }
 
 #pragma make - getter
--(NSMutableArray *)bezierPaths
+-(NSMutableArray *)paths
 {
-    if (!_bezierPaths) {
-        _bezierPaths = [NSMutableArray array];
+    if (!_paths) {
+        _paths = [NSMutableArray array];
     }
-    return _bezierPaths ;
+    return _paths ;
 }
 - (UIView *)screenshotRactView
 {
